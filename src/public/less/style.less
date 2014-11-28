@@ -2,16 +2,20 @@
 @import "bootstrap/less/bootstrap";
 
 
-.vertical-align(@top: 50%;) {
+.vertical-align {
   position: relative;
-  top: @top;
-  transform: translateY(@top);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+html, body, .container, .view-container {
+  height: 100%;
+  width: 100%;
 }
 
 body {
   font-family: Garamond, Georgia, "Times New Roman", serif;
   color: darken(#b3b3b3, 6%);
-  padding-top: 10%;
 }
 
 h2 {
@@ -19,15 +23,13 @@ h2 {
   font-size: 24px;
 }
 
-  body .imgbox {
-    max-width: 560px;
-    margin: 0 auto;
-  }
+body .imgbox {
+  max-width: 560px;
+  margin: 0 auto;
+  .vertical-align;
+}
 
 @media (max-width: 768px) {
-  body {
-    padding-top: 20%;
-  }
   h2 {
     font-size: 16px;
   }
