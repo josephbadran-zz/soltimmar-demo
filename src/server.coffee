@@ -8,6 +8,7 @@ require("bucket-node").initSingletonBucket 'cms.db', (data) ->
   cookieParser = require("cookie-parser")
   bodyParser = require("body-parser")
   routes = require("./routes/index")
+  config = require("./config")
   app = express()
 
   #console.log process.env.NODE_ENV
@@ -23,7 +24,7 @@ require("bucket-node").initSingletonBucket 'cms.db', (data) ->
   if process.env.NODE_ENV != "production"
     app.use "/app", require("coffee-middleware")(src: path.join(__dirname, "app"))
   
-    app.use "/css", require("less-middleware")(path.join(__dirname, "public", "less"),
+    app.use "/css", require("less-middleware")(path.join(__dirname, "app", "less"),
       dest: path.join(__dirname, "public", "css")
       debug: true
       parser:
@@ -41,7 +42,6 @@ require("bucket-node").initSingletonBucket 'cms.db', (data) ->
   app.get "/partials/:name", routes.partials
 
   app.get "*", routes.index
-
 
   server = app.listen(app.get("port"), ->
     console.log "Express server listening on port " + server.address().port
