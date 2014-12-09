@@ -6,13 +6,19 @@ angular.module("naratusApp", [
   "naratusApp.controllers"
   "naratusApp.directives"
   "naratusApp.services"
-]).config(($routeProvider, $locationProvider) ->
+])
+.config(($routeProvider, $locationProvider, $sceDelegateProvider) ->
   $routeProvider
   .when("/",
     controller: "AppCtrl"
-    templateUrl: "partials/partial1"
   )
   .otherwise(redirectTo: "/")
 
   $locationProvider.html5Mode(true)
+
+  $sceDelegateProvider.resourceUrlWhitelist([
+    "self"
+    "http://static.sr.se/**"
+  ])
+
 )

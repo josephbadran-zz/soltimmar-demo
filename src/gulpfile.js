@@ -4,6 +4,7 @@ var gulp = require("gulp");
 var path = require("path");
 var del = require("del");
 var ncp = require("ncp").ncp;
+var wiredep = require("wiredep").stream
 
 var $ = require("gulp-load-plugins")();
 
@@ -57,8 +58,15 @@ gulp.task("copy", ["usemin"], function(cb){
   });
 });
 
-gulp.task("default", ["clean:before", "imagemin", "fonts", "coffee", "usemin", "copy", "clean:after"]);
+gulp.task("wire", function(){
+  gulp.src("./views/index.jade")
+    .pipe(wiredep({
+      ignorePath: "../public"
+    }))
+    .pipe(gulp.dest("./views"))
+});
 
+gulp.task("default", ["clean:before", "imagemin", "fonts", "coffee", "usemin", "copy", "clean:after"]);
 
 
 

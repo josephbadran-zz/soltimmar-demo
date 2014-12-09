@@ -1,10 +1,5 @@
-
 .container
-  .imgbox
-    img(src="/img/naratus-logo@2x.png").img-responsive
-
-    .row
-      .col-xs-6
-        h2 @naratus
-      .col-xs-6.text-right
-        h2 story to be told
+  button.btn.btn-primary(type="button" ng-click="playerUpdate()") Update
+  button.btn.btn-primary(type="button" ng-click="changeSong()") Change
+  audio#nt-player(preload="auto" controls)
+    source(type="audio/mpeg")

@@ -9,21 +9,50 @@ html.no-js(ng-app="naratusApp")
     meta(charset="utf-8")
     meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
     base(href="/")
-    title Naratus
+    title Soltimmar
     meta(name="description", content="")
     meta(name="viewport", content="width=device-width")
     <!-- build:css(public) css/style.css -->
     link(rel="stylesheet",href="/css/style.css")
+    link(rel="stylesheet", href="https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css")
     <!-- endbuild -->
 
   body(ng-controller="AppCtrl")
-    div(ng-view).view-container
+    div#map.map
+
+
 
     <!-- build:lib(public) js/lib.js -->
-    script(src="/bower_components/angular/angular.js")
-    script(src="/bower_components/angular-route/angular-route.js")
-    script(src="/bower_components/angular-animate/angular-animate.js")
+    // bower:js
+    script(src='/bower_components/modernizr/modernizr.js')
+    script(src='/bower_components/jquery/dist/jquery.js')
+    script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
+    script(src='/bower_components/angular/angular.js')
+    script(src='/bower_components/angular-route/angular-route.js')
+    script(src='/bower_components/angular-animate/angular-animate.js')
+    script(src='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js')
+    // endbower
     <!-- endbuild -->
+
+    script.
+      L.mapbox.accessToken = "pk.eyJ1Ijoiam9zZXBoYmFkcmFuIiwiYSI6InlibFFvd3MifQ.6lU5CyogWzYU0i7cI9BNkg";
+      var map = L.mapbox.map('map', "josephbadran.kdei5gj4", {
+        scrollWheelZoom: false,
+        zoomControl: false
+      }).setView([59.3253,18.01711], 13);
+
+      map.dragging.disable();
+      map.touchZoom.disable();
+      map.doubleClickZoom.disable();
+      map.scrollWheelZoom.disable();
+      if (map.tap) map.tap.disable();
+
+
+      map.on("click", function(e) {
+        console.log(e.latlng);
+        L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+      });
+
 
     <!-- build:app(./) js/app.js -->
     script(src="/app/app.js")
@@ -31,4 +60,3 @@ html.no-js(ng-app="naratusApp")
     script(src="/app/components/controllers.js")
     script(src="/app/components/directives.js")
     <!-- endbuild -->
-
