@@ -21,22 +21,17 @@ require("bucket-node").initSingletonBucket 'cms.db', (data) ->
   app.use bodyParser.urlencoded()
   app.use cookieParser()
   
-  if process.env.NODE_ENV != "production"
-    app.use "/app", require("coffee-middleware")(src: path.join(__dirname, "app"))
-  
-    app.use "/css", require("less-middleware")(path.join(__dirname, "app", "less"),
-      dest: path.join(__dirname, "public", "css")
-      debug: true
-      parser:
-        paths: [ path.join(__dirname, "public", "bower_components") ]
-    )
+  app.use "/app", require("coffee-middleware")(src: path.join(__dirname, "app"))
 
-    app.set "views", path.join(__dirname, "views")
-    app.use express.static(path.join(__dirname, "public"))
+  app.use "/css", require("less-middleware")(path.join(__dirname, "app", "less"),
+    dest: path.join(__dirname, "public", "css")
+    debug: true
+    parser:
+      paths: [ path.join(__dirname, "public", "bower_components") ]
+  )
 
-  else
-    app.set "views", path.join(__dirname, "build/")
-    app.use express.static(path.join(__dirname, "build"))
+  app.set "views", path.join(__dirname, "views")
+  app.use express.static(path.join(__dirname, "public"))
 
   app.get "/", routes.index
   app.get "/partials/:name", routes.partials
