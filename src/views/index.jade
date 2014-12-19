@@ -13,8 +13,8 @@ html.no-js(ng-app="naratusApp")
     meta(name="description", content="")
     meta(name="viewport", content="width=device-width")
     <!-- build:css(public) css/style.css -->
-    link(rel="stylesheet",href="/css/style.css")
     link(rel="stylesheet", href="https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css")
+    link(rel="stylesheet",href="/css/style.css")
     <!-- endbuild -->
 
   body(ng-controller="AppCtrl")
@@ -29,6 +29,8 @@ html.no-js(ng-app="naratusApp")
     script(src='/bower_components/angular-route/angular-route.js')
     script(src='/bower_components/angular-animate/angular-animate.js')
     script(src='/bower_components/mapbox.js/mapbox.js')
+    script(src='/bower_components/Chart.js/Chart.min.js')
+    script(src='/bower_components/jquery-ui/jquery-ui.js')
     // endbower
     <!-- endbuild -->
 
@@ -44,11 +46,11 @@ html.no-js(ng-app="naratusApp")
         zoomControl: true
       }).setView([59.32425764439889,18.071308135986328], 13);
 
-      map.dragging.disable();
-      map.touchZoom.disable();
-      map.doubleClickZoom.disable();
-      map.scrollWheelZoom.disable();
-      if (map.tap) map.tap.disable();
+      //- map.dragging.disable();
+      //- map.touchZoom.disable();
+      //- map.doubleClickZoom.disable();
+      //- map.scrollWheelZoom.disable();
+      //- if (map.tap) map.tap.disable();
 
       map.on("click", function(e) {
         $.ajax({
@@ -74,16 +76,18 @@ html.no-js(ng-app="naratusApp")
         });
 
         var popupContent = "<div id='popup'><p class='adress'>"+adress+"</p><p class='latlng'>Lat: "+e.latlng.lat+" Lng: "+e.latlng.lng+"</p>"
-        + "<canvas id='canvas' width='340' height='200'></canvas>" + "<div class='verticalRange'>" + "<input type='range' class='vertical minslider' orient='vertical'></div>" + 
+        + "<canvas id='canvas'></canvas>" + "<div class='verticalRange'><h6>01/01 -14</h6><input type='range' class='vertical minslider' orient='vertical' min='0' max='100'></div>" + 
         "<div class='row'><div class='col-xs-6'><h3>Lorem ipsum dolor sit amet</h3> Consectetur adipiscing elit. In in orci risus. Aenean auctor est tortor, in egestas metus pellentesque nec. Duis ligula tellus, imperdiet non sapien at, facilisis tincidunt erat. Suspendisse quis elit venenatis, dignissim elit in, convallis arcu. Aliquam urna augue, suscipit sit amet mi non, vestibulum porta mi.</div><div class='col-xs-6'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In in orci risus. Aenean auctor est tortor, in egestas metus pellentesque nec. Duis ligula tellus, imperdiet non sapien at, facilisis tincidunt erat. Suspendisse quis elit venenatis, dignissim elit in, convallis arcu. Aliquam urna augue, suscipit sit amet mi non, vestibulum porta mi.</div></div>";
 
 
         marker.bindPopup(popupContent, {
-          minWidth: 580,
+          minWidth: 620,
           maxWidth: 650
         }).addTo(map).openPopup();
 
+
         addGraph()
+
 
 
         $("#updateGraphBtn").on("click", function() {
@@ -93,6 +97,7 @@ html.no-js(ng-app="naratusApp")
       }
 
       $("body").on("change", ".minslider", function(e) {
+        console.log($(this).val());
         updateGraph()
       });
 
@@ -132,6 +137,8 @@ html.no-js(ng-app="naratusApp")
 
         window.myLine.update()
       }
+
+      
 
   
       
