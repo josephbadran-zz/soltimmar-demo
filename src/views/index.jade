@@ -52,7 +52,7 @@ html.no-js(ng-app="naratusApp")
 
       map.on("click", function(e) {
         $.ajax({
-          url: "https://maps.googleapis.com/maps/api/geocode/json?latlng="+e.latlng.lat+","+e.latlng.lng+"&key=AIzaSyC9OArLCz-Y6MrwPWPFrZuUAul2pnb6z9o",
+          url: "https://maps.googleapis.com/maps/api/geocode/json?latlng="+e.latlng.lat+","+e.latlng.lng,
           success: function (data) {
             addMarker(data.results[0].formatted_address, e);
           }
