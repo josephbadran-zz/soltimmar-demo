@@ -16,9 +16,5 @@ angular.module("naratusApp", [
 
   $locationProvider.html5Mode(true)
 
-  $sceDelegateProvider.resourceUrlWhitelist([
-    "self"
-    "http://static.sr.se/**"
-  ])
 
 )

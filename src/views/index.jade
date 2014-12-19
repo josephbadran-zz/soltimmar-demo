@@ -20,8 +20,6 @@ html.no-js(ng-app="naratusApp")
   body(ng-controller="AppCtrl")
     div#map.map
 
-
-
     <!-- build:lib(public) js/lib.js -->
     // bower:js
     script(src='/bower_components/modernizr/modernizr.js')
@@ -30,16 +28,21 @@ html.no-js(ng-app="naratusApp")
     script(src='/bower_components/angular/angular.js')
     script(src='/bower_components/angular-route/angular-route.js')
     script(src='/bower_components/angular-animate/angular-animate.js')
-    script(src='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js')
+    script(src='/bower_components/mapbox.js/mapbox.js')
     // endbower
     <!-- endbuild -->
 
+    script(src='/charts/Chart.min.js')
+
+
     script.
+      var marker = null;
+
       L.mapbox.accessToken = "pk.eyJ1Ijoiam9zZXBoYmFkcmFuIiwiYSI6InlibFFvd3MifQ.6lU5CyogWzYU0i7cI9BNkg";
       var map = L.mapbox.map('map', "josephbadran.kdei5gj4", {
-        scrollWheelZoom: false,
-        zoomControl: false
-      }).setView([59.3253,18.01711], 13);
+        scrollWheelZoom: true,
+        zoomControl: true
+      }).setView([59.32425764439889,18.071308135986328], 13);
 
       map.dragging.disable();
       map.touchZoom.disable();
@@ -47,11 +50,91 @@ html.no-js(ng-app="naratusApp")
       map.scrollWheelZoom.disable();
       if (map.tap) map.tap.disable();
 
-
       map.on("click", function(e) {
-        console.log(e.latlng);
-        L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+        $.ajax({
+          url: "https://maps.googleapis.com/maps/api/geocode/json?latlng="+e.latlng.lat+","+e.latlng.lng+"&key=AIzaSyDhS_KqWwo-5nPwXrTsJWgg_u7YpQPwM9Q",
+          success: function (data) {
+            addMarker(data.results[0].formatted_address, e);
+          }
+
+        });
       });
+
+      function addMarker(adress, e) {
+        if(marker) {
+          map.removeLayer(marker);
+        }
+
+        marker = L.marker([e.latlng.lat, e.latlng.lng], {
+          icon: L.mapbox.marker.icon({
+            "marker-size": "medium",
+            "marker-symbol": "star",
+            "marker-color": "#fa0"
+            })
+        });
+
+        var popupContent = "<div id='popup'><p class='adress'>"+adress+"</p><p class='latlng'>Lat: "+e.latlng.lat+" Lng: "+e.latlng.lng+"</p>"
+        + "<canvas id='canvas' width='340' height='200'></canvas>" + "<div class='verticalRange'>" + "<input type='range' class='vertical minslider' orient='vertical'></div>" + 
+        "<div class='row'><div class='col-xs-6'><h3>Lorem ipsum dolor sit amet</h3> Consectetur adipiscing elit. In in orci risus. Aenean auctor est tortor, in egestas metus pellentesque nec. Duis ligula tellus, imperdiet non sapien at, facilisis tincidunt erat. Suspendisse quis elit venenatis, dignissim elit in, convallis arcu. Aliquam urna augue, suscipit sit amet mi non, vestibulum porta mi.</div><div class='col-xs-6'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In in orci risus. Aenean auctor est tortor, in egestas metus pellentesque nec. Duis ligula tellus, imperdiet non sapien at, facilisis tincidunt erat. Suspendisse quis elit venenatis, dignissim elit in, convallis arcu. Aliquam urna augue, suscipit sit amet mi non, vestibulum porta mi.</div></div>";
+
+
+        marker.bindPopup(popupContent, {
+          minWidth: 580,
+          maxWidth: 650
+        }).addTo(map).openPopup();
+
+        addGraph()
+
+
+        $("#updateGraphBtn").on("click", function() {
+          console.log("klick");
+          updateGraph();
+        }); 
+      }
+
+      $("body").on("change", ".minslider", function(e) {
+        updateGraph()
+      });
+
+      var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+      var lineChartData = {
+        labels : ["08","09","10","11","12","13","14","15","16","17","18","19","20","21","22"],
+        datasets : [
+          {
+            label: "My First dataset",
+            fillColor : "rgba(220,220,220,0.2)",
+            strokeColor : "rgba(220,220,220,1)",
+            pointColor : "rgba(220,220,220,1)",
+            pointStrokeColor : "#5ca7d6",
+            pointHighlightFill : "#fff",
+            pointHighlightStroke : "rgba(220,220,220,1)",
+            data : [0,randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+          }
+        ]
+      }
+
+
+      function addGraph() {
+        var ctx = document.getElementById("canvas").getContext("2d");
+        window.myLine =  new Chart(ctx).Line(lineChartData, {
+          responsive: true
+        });
+      }
+
+      function updateGraph() {
+        var newPoints = [0,randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+        var i = 0;
+        console.log(window.myLine.datasets[0].points);
+        for (var point in window.myLine.datasets[0].points) {
+          window.myLine.datasets[0].points[i].value = newPoints[i];
+          i+=1;
+        }
+
+        window.myLine.update()
+      }
+
+  
+      
 
 
     <!-- build:app(./) js/app.js -->
